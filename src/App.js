@@ -1,103 +1,61 @@
 import React, { Component } from "react";
-import FriendCard from "./components/friendCard";
-import Nav from "./components/Nav";
+import friendCard from "./components/friendCard";
 import Wrapper from "./components/Wrapper";
 import Title from "./components/Title";
-import Container from "./Container";
-import Row from "./Row";
-import Column from "./Column";
+import Nav  from "./components/Nav";
 import friends from "./friends.json";
 import "./App.css";
 
-function shuffleFriends(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-};
-
 class App extends Component {
-  // Set this.state
   state = {
     friends,
-    currentScore: 0,
-    topScore: 0,
-    rightWrong: "",
-    clicked: [],
+    score: 0,
+    highscore: 0
   };
 
-  handleClick = id => {
-    if (this.state.clicked.indexOf(id) === -1) {
-      this.handleIncrement();
-      this.setState({ clicked: this.state.clicked.concat(id) });
-    } else {
-      this.handleReset();
+  gameOver = () => {
+    if (this.state.score > this.state.highscore) {
+      this.setState({highscore: this.state.score}, function() {
+        console.log(this.state.highscore);
+      });
     }
-  };
-
-  handleIncrement = () => {
-    const newScore = this.state.currentScore + 1;
-    this.setState({
-      currentScore: newScore,
-      rightWrong: ""
+    this.state.friends.forEach(friendCard => {
+      friendCard.count = 0;
     });
-    if (newScore >= this.state.topScore) {
-      this.setState({ topScore: newScore });
-    }
-    else if (newScore === 12) {
-      this.setState({ rightWrong: "You win!" });
-    }
-    this.handleShuffle();
-  };
+    alert(`Game Over :( \nscore: ${this.state.score}`);
+    this.setState({score: 0});
+    return true;
+  }
 
-  handleReset = () => {
-    this.setState({
-      currentScore: 0,
-      topScore: this.state.topScore,
-      rightWrong: "Go!",
-      clicked: []
+  clickCount = id => {
+    this.state.friends.find((o, i) => {
+      if (o.id === id) {
+        if(friends[i].count === 0){
+          friends[i].count = friends[i].count + 1;
+          this.setState({score : this.state.score + 1}, function(){
+            console.log(this.state.score);
+          });
+          this.state.friends.sort(() => Math.random() - 0.5)
+          return true; 
+        } else {
+          this.gameOver();
+        }
+      }
     });
-    this.handleShuffle();
-  };
-
-  handleShuffle = () => {
-    let shuffledFriends = shuffleFriends(friends);
-    this.setState({ friends: shuffledFriends });
-  };
-
+  }
+  // Map 
   render() {
     return (
       <Wrapper>
-        <Nav
-          title="Oodles of Poodles"
-          score={this.state.currentScore}
-          topScore={this.state.topScore}
-          rightWrong={this.state.rightWrong}
-        />
-
-        <Title>
-          Try to click on each poodle just once - but only click on them once or
-          you'll be sad as hound dog's eye!
-        </Title>
-
-        <Container>
-          <Row>
-            {this.state.friends.map(friend => (
-              <Column size="md-3 sm-6">
-                <FriendCard
-                  key={friend.id}
-                  handleClick={this.handleClick}
-                  handleIncrement={this.handleIncrement}
-                  handleReset={this.handleReset}
-                  handleShuffle={this.handleShuffle}
-                  id={friend.id}
-                  image={friend.image}
-                />
-              </Column>
-            ))}
-          </Row>
-        </Container>
+        <Title score={this.state.score} highscore={this.state.highscore}>Oodels of Poodles</Title>
+        {this.state.friends.map(card => (
+          <friendCard
+            clickCount={this.clickCount}
+            id={card.id}
+            key={card.id}
+            image={card.image}
+          />
+        ))}
       </Wrapper>
     );
   }
