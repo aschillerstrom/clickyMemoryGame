@@ -1,14 +1,14 @@
 import React, { Component } from "react";
-import friendCard from "./components/friendCard";
+import Card from "./components/friendCard";
 import Wrapper from "./components/Wrapper";
 import Title from "./components/Title";
-import Nav  from "./components/Nav";
-import friends from "./friends.json";
+//import Nav  from "./components/Nav";
+import cards from "./friends.json";
 import "./App.css";
 
 class App extends Component {
   state = {
-    friends,
+    cards,
     score: 0,
     highscore: 0
   };
@@ -19,8 +19,8 @@ class App extends Component {
         console.log(this.state.highscore);
       });
     }
-    this.state.friends.forEach(friendCard => {
-      friendCard.count = 0;
+    this.state.cards.forEach(Card => {
+      Card.count = 0;
     });
     alert(`Game Over :( \nscore: ${this.state.score}`);
     this.setState({score: 0});
@@ -28,14 +28,14 @@ class App extends Component {
   }
 
   clickCount = id => {
-    this.state.friends.find((o, i) => {
+    this.state.cards.find((o, i) => {
       if (o.id === id) {
-        if(friends[i].count === 0){
-          friends[i].count = friends[i].count + 1;
+        if(cards[i].count === 0){
+          cards[i].count = cards[i].count + 1;
           this.setState({score : this.state.score + 1}, function(){
             console.log(this.state.score);
           });
-          this.state.friends.sort(() => Math.random() - 0.5)
+          this.state.cards.sort(() => Math.random() - 0.5)
           return true; 
         } else {
           this.gameOver();
@@ -46,10 +46,12 @@ class App extends Component {
   // Map 
   render() {
     return (
+
       <Wrapper>
-        <Title score={this.state.score} highscore={this.state.highscore}>Oodels of Poodles</Title>
-        {this.state.friends.map(card => (
-          <friendCard
+
+        <Title score={this.state.score} highscore={this.state.highscore}>Oodles of Poodles</Title>
+        {this.state.cards.map(card => (
+          <Card
             clickCount={this.clickCount}
             id={card.id}
             key={card.id}
