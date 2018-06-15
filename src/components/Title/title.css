@@ -5,6 +5,7 @@
     color: purple;
     margin-bottom: 10px;
     background-color: yellow;
+    text-align: center;
   }
   
   .title {
@@ -13,4 +14,5 @@
   
   .scores {
     float: right;
+    margin: 30px;
   }
