@@ -5,6 +5,9 @@ import Title from "./components/Title";
 //import Nav  from "./components/Nav";
 import cards from "./friends.json";
 import "./App.css";
+import { HashRouter as Router} from 'react-router-dom';
+
+ReactDOM.render(<Router basename={process.env.PUBLIC_URL}>< App /></Router>, document.getElementById('root'));
 
 class App extends Component {
   state = {
