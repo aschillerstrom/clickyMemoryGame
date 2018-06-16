@@ -7,8 +7,6 @@ import cards from "./friends.json";
 import "./App.css";
 
 
-ReactDOM.render(<App />, document.getElementById("root"));
-
 class App extends Component {
   state = {
     cards,
